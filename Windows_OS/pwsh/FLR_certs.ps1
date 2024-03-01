@@ -7,6 +7,12 @@ $oldDays = 35
 # Specify the number of days for considering a certificate unused
 $unusedDays = 30
 
+# Get the path to the user's Documents folder
+$userDocumentsPath = [Environment]::GetFolderPath("MyDocuments")
+
+# Start the transcript to enable logging verbosity
+Start-Transcript -Path "$userDocumentsPath\certificate_cleanup_log_$(Get-Date -Format 'yyyy-MM-dd_HH-mm-ss').txt" -Append
+
 # Get all certificates from the Local Machine store
 $localMachineCerts = Get-ChildItem -Path Cert:\LocalMachine\My
 
@@ -42,3 +48,6 @@ foreach ($cert in $currentUserCertstoDelete) {
 }
 
 Write-Host "Untrusted, expired, old, and unused certificates have been deleted from both Local Machine and Current User stores."
+
+# Stop the transcript to end logging verbosity
+Stop-Transcript
